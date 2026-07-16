@@ -1,0 +1,29 @@
+{
+  "name": "student-placement-prediction-frontend",
+  "private": true,
+  "version": "2.0.0",
+  "type": "module",
+  "description": "AI-Based Student Placement Prediction System — React 19 Frontend",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview",
+    "lint": "eslint . --ext js,jsx --report-unused-disable-directives --max-warnings 0"
+  },
+  "dependencies": {
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0",
+    "react-router-dom": "^6.26.2",
+    "axios": "^1.7.7",
+    "recharts": "^2.12.7",
+    "framer-motion": "^11.11.1"
+  },
+  "devDependencies": {
+    "@vitejs/plugin-react": "^4.3.2",
+    "vite": "^5.4.8",
+    "eslint": "^9.11.1",
+    "eslint-plugin-react": "^7.37.1",
+    "eslint-plugin-react-hooks": "^5.1.0-rc.0",
+    "eslint-plugin-react-refresh": "^0.4.12"
+  }
+}

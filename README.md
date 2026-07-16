@@ -2,14 +2,15 @@
 
 <div align="center">
 
-![Python](https://img.shields.io/badge/Python-3.12+-3776AB?style=for-the-badge&logo=python&logoColor=white)
-![Streamlit](https://img.shields.io/badge/Streamlit-1.28+-FF4B4B?style=for-the-badge&logo=streamlit&logoColor=white)
-![Scikit-learn](https://img.shields.io/badge/Scikit--learn-1.3+-F7931E?style=for-the-badge&logo=scikit-learn&logoColor=white)
-![License](https://img.shields.io/badge/License-MIT-green.svg?style=for-the-badge)
+![Status](https://img.shields.io/badge/Status-Production%20Ready-22C55E?style=for-the-badge)
+![FastAPI](https://img.shields.io/badge/FastAPI-0.139-009688?style=for-the-badge&logo=fastapi)
+![React](https://img.shields.io/badge/React-19-61DAFB?style=for-the-badge&logo=react)
+![Python](https://img.shields.io/badge/Python-3.12+-3776AB?style=for-the-badge&logo=python)
+![License](https://img.shields.io/badge/License-MIT-blue?style=for-the-badge)
 
-**A production-ready Machine Learning system that predicts campus placement outcomes for students using academic and skill-related features.**
+**A production-ready, enterprise-grade AI platform for predicting student campus placement outcomes.**
 
-[Live Demo](#how-to-run) · [Dataset](#dataset-description) · [Results](#results) · [Features](#features)
+[Live Demo](#) · [API Docs](http://localhost:8000/docs) · [Report Bug](#) · [Request Feature](#)
 
 </div>
 
@@ -17,236 +18,324 @@
 
 ## 📋 Table of Contents
 
-- [Project Overview](#project-overview)
-- [Problem Statement](#problem-statement)
-- [Objectives](#objectives)
-- [Features](#features)
-- [Dataset Description](#dataset-description)
-- [Installation](#installation)
+- [Overview](#overview)
+- [Architecture](#architecture)
+- [Tech Stack](#tech-stack)
 - [Project Structure](#project-structure)
-- [How to Run](#how-to-run)
-- [Results](#results)
+- [Installation](#installation)
+- [Running the Application](#running-the-application)
+- [API Reference](#api-reference)
+- [Deployment](#deployment)
+- [Features](#features)
 - [Screenshots](#screenshots)
-- [Future Enhancements](#future-enhancements)
-- [License](#license)
-- [Author](#author)
 
 ---
 
-## 🎯 Project Overview
+## 🎯 Overview
 
-The **AI-Based Student Placement Prediction System** is a full-stack machine learning application built with Python and Streamlit. It uses historical student data (academic performance + skill ratings) to train four different classification algorithms and automatically selects the best-performing model to predict whether a student will be **Placed** or **Not Placed** during campus recruitment.
+The **AI-Based Student Placement Prediction System** uses trained machine learning models to predict whether an engineering student will be placed during campus recruitment. The system is built on 45,000+ student records with 13 features including CGPA, internships, coding skills, and soft skills.
 
----
-
-## 📌 Problem Statement
-
-Academic institutions face the challenge of identifying students who may struggle during campus placements. Early prediction enables:
-- Targeted skill-development programs
-- Mock interview preparation
-- Mentorship allocation
-- Curriculum adjustments
-
-This system provides a data-driven approach to placement prediction using supervised machine learning.
+### Key Features
+- 🔮 **Real-time Single Prediction** — Instant placement prediction with probability score
+- 📦 **Batch Prediction** — Predict for up to 1,000 students at once via API
+- 📊 **Analytics Dashboard** — Placement trends, branch-wise stats, CGPA distribution
+- 📈 **Model Performance** — Compare 4 ML models with confusion matrix & radar charts
+- 🗃️ **Dataset Analysis** — Explore raw data, statistics, and correlation heatmap
+- 🌗 **Dark/Light Mode** — Professional dark theme with light mode toggle
 
 ---
 
-## 🎯 Objectives
+## 🏗️ Architecture
 
-- [x] Build a robust multi-model ML pipeline for binary classification
-- [x] Automatically benchmark and select the best-performing algorithm
-- [x] Provide an intuitive Streamlit dashboard for students and faculty
-- [x] Enable single and batch prediction workflows
-- [x] Visualize model metrics, feature importance, and data insights interactively
-- [x] Follow production-grade OOP, PEP8, and exception-handling standards
+```
+┌─────────────────────────────────────────────────────────────────┐
+│                    React 19 Frontend                            │
+│  (Vite + Recharts + Framer Motion + React Router 6)            │
+│  ┌─────────┐ ┌────────────┐ ┌──────────┐ ┌─────────────────┐  │
+│  │  Home   │ │ Prediction │ │Dashboard │ │ Model Perf.     │  │
+│  └─────────┘ └────────────┘ └──────────┘ └─────────────────┘  │
+└──────────────────────────┬──────────────────────────────────────┘
+                           │ HTTP / REST API (Axios)
+                           │ localhost:8000
+┌──────────────────────────▼──────────────────────────────────────┐
+│                    FastAPI Backend                              │
+│  ┌────────────────┐  ┌───────────────┐  ┌──────────────────┐  │
+│  │  API Routes    │  │  PlacementPr  │  │   DataService    │  │
+│  │  /predict      │  │  edictor      │  │  dataset stats   │  │
+│  │  /batch-predict│  │  .pkl load    │  │  correlation     │  │
+│  │  /metrics      │  │  inference    │  │  sample data     │  │
+│  └────────────────┘  └───────────────┘  └──────────────────┘  │
+└──────────────────────────┬──────────────────────────────────────┘
+                           │
+              ┌────────────┤
+              │            │
+  ┌───────────▼──┐  ┌──────▼───────────┐
+  │  model.pkl   │  │  dataset/train.  │
+  │  le.pkl      │  │  xls (CSV)       │
+  └──────────────┘  └──────────────────┘
+```
+
+---
+
+## 🛠️ Tech Stack
+
+| Layer       | Technology                                           |
+|-------------|------------------------------------------------------|
+| Frontend    | React 19, Vite 5, React Router 6, Axios             |
+| UI/Charts   | Recharts 2, Framer Motion, Vanilla CSS              |
+| Backend     | FastAPI, Uvicorn, Pydantic v2                       |
+| ML          | Scikit-learn, Joblib, Pandas, NumPy                 |
+| Models      | Logistic Regression, Decision Tree, Random Forest, KNN |
+| Deployment  | Render / Railway (API) · Vercel / GitHub Pages (UI) |
+
+---
+
+## 📁 Project Structure
+
+```
+StudentPlacementPrediction/
+├── backend/
+│   ├── main.py                         # FastAPI app + CORS + lifespan
+│   ├── requirements.txt
+│   └── app/
+│       ├── api/
+│       │   └── routes.py              # All REST endpoints
+│       ├── models/
+│       │   └── schemas.py             # Pydantic request/response models
+│       ├── services/
+│       │   ├── predictor.py           # ML inference service
+│       │   └── data_service.py        # Dataset analytics service
+│       └── utils/
+│           └── logger.py              # Logging configuration
+│
+├── frontend/
+│   ├── index.html
+│   ├── vite.config.js
+│   ├── package.json
+│   └── src/
+│       ├── main.jsx                   # React 19 entry point
+│       ├── App.jsx                    # Router + layout shell
+│       ├── index.css                  # Global design system
+│       ├── components/
+│       │   ├── Navbar.jsx             # Top navigation bar
+│       │   ├── Sidebar.jsx            # Fixed left sidebar
+│       │   ├── StatCard.jsx           # Animated KPI card
+│       │   ├── ChartCard.jsx          # Chart wrapper
+│       │   ├── LoadingSpinner.jsx     # Loading state
+│       │   ├── Toast.jsx              # Notifications
+│       │   └── ProbabilityRing.jsx    # SVG probability gauge
+│       ├── pages/
+│       │   ├── Home.jsx               # Landing + quick stats
+│       │   ├── Prediction.jsx         # Single prediction form
+│       │   ├── Dashboard.jsx          # Analytics dashboard
+│       │   ├── ModelPerformance.jsx   # Model evaluation
+│       │   ├── DatasetAnalysis.jsx    # Data exploration
+│       │   ├── About.jsx              # Project info
+│       │   └── NotFound.jsx           # 404 page
+│       ├── services/
+│       │   └── api.js                 # Axios API service
+│       └── hooks/
+│           ├── useTheme.js            # Dark/light mode
+│           └── useToast.js            # Toast notifications
+│
+├── models/
+│   ├── placement_prediction_model.pkl # Trained ML model
+│   └── label_encoder.pkl             # Label encoders
+├── dataset/
+│   └── train.xls                     # Training dataset (CSV)
+├── train_model.py                    # Model training script
+└── README.md
+```
+
+---
+
+## ⚡ Installation
+
+### Prerequisites
+- Python 3.10+ 
+- Node.js 18+
+- npm or yarn
+
+### 1. Clone the Repository
+```bash
+git clone https://github.com/your-username/StudentPlacementPrediction.git
+cd StudentPlacementPrediction
+```
+
+### 2. Backend Setup
+```bash
+cd backend
+pip install -r requirements.txt
+```
+
+### 3. Frontend Setup
+```bash
+cd frontend
+npm install
+```
+
+> **Note:** The pre-trained model files (`placement_prediction_model.pkl` and `label_encoder.pkl`) are already in the `models/` directory. No retraining is needed.
+
+---
+
+## 🚀 Running the Application
+
+### Start the Backend (FastAPI)
+```bash
+# From the backend/ directory
+cd backend
+uvicorn main:app --reload --host 0.0.0.0 --port 8000
+```
+✅ API available at: `http://localhost:8000`  
+📖 Swagger UI: `http://localhost:8000/docs`
+
+### Start the Frontend (React)
+```bash
+# From the frontend/ directory (new terminal)
+cd frontend
+npm run dev
+```
+✅ App available at: `http://localhost:5173`
+
+---
+
+## 📡 API Reference
+
+### Base URL: `http://localhost:8000`
+
+| Method | Endpoint            | Description                          |
+|--------|---------------------|--------------------------------------|
+| `GET`  | `/`                 | API info and endpoint listing        |
+| `GET`  | `/health`           | Health check                         |
+| `POST` | `/predict`          | Single student placement prediction  |
+| `POST` | `/batch-predict`    | Batch prediction (up to 1,000)       |
+| `GET`  | `/model-info`       | Model metadata and allowed values    |
+| `GET`  | `/metrics`          | All model accuracy metrics           |
+| `GET`  | `/feature-importance` | Feature importance scores          |
+| `GET`  | `/dataset-stats`    | Aggregated dataset statistics        |
+| `GET`  | `/correlation`      | Feature correlation matrix           |
+| `GET`  | `/dataset-sample`   | First N rows of the dataset          |
+
+### POST /predict — Example
+
+**Request:**
+```json
+{
+  "age": 21,
+  "gender": "Male",
+  "degree": "B.Tech",
+  "branch": "CSE",
+  "cgpa": 8.5,
+  "internships": 2,
+  "projects": 3,
+  "coding_skills": 7,
+  "communication_skills": 8,
+  "aptitude_score": 75,
+  "soft_skills": 7,
+  "certifications": 2,
+  "backlogs": 0
+}
+```
+
+**Response:**
+```json
+{
+  "prediction": "Placed",
+  "placement_probability": 94.52,
+  "not_placed_probability": 5.48,
+  "model_used": "DecisionTreeClassifier",
+  "confidence": "High",
+  "input_summary": { ... }
+}
+```
+
+---
+
+## 🌐 Deployment
+
+### Backend — Deploy to Render
+
+1. Create a new **Web Service** on [render.com](https://render.com)
+2. Set **Root Directory** → `backend`
+3. **Build Command:** `pip install -r requirements.txt`
+4. **Start Command:** `uvicorn main:app --host 0.0.0.0 --port $PORT`
+5. Add environment variables if needed
+
+### Frontend — Deploy to Vercel
+
+1. Install the Vercel CLI: `npm i -g vercel`
+2. Update `VITE_API_URL` in `frontend/.env`:
+   ```
+   VITE_API_URL=https://your-render-api.onrender.com
+   ```
+3. From the frontend directory:
+   ```bash
+   npm run build
+   vercel --prod
+   ```
+
+### Frontend — Deploy to GitHub Pages
+
+1. Add to `frontend/package.json`:
+   ```json
+   "homepage": "https://username.github.io/repo-name"
+   ```
+2. Install: `npm install gh-pages --save-dev`
+3. Deploy: `npm run build && npx gh-pages -d dist`
 
 ---
 
 ## ✨ Features
 
-### 🤖 Machine Learning
-- **4 Algorithms**: Logistic Regression, Decision Tree, Random Forest, KNN
-- **Auto Model Selection**: Automatically picks the best model by testing accuracy
-- **Comprehensive Evaluation**: Accuracy, Precision, Recall, F1-Score, Confusion Matrix
+### 🔮 Prediction Page
+- Professional form with 13 input fields
+- Interactive range sliders with real-time value display
+- Animated SVG probability ring gauge
+- Placed / Not Placed result card with colour coding
+- Confidence tier: High / Medium / Low
+- Class probability breakdown
 
-### 📊 Interactive Dashboard (5 Pages)
-| Page | Description |
-|------|-------------|
-| 🏠 Home | KPI cards, class distribution, branch-wise placement, CGPA charts |
-| 🔮 Predict | Single & batch prediction with probability gauge |
-| 📊 Dataset Overview | Raw data, statistics, correlation heatmap, feature analysis |
-| 📈 Model Performance | Comparison table, radar chart, confusion matrix, feature importance |
-| ℹ️ About | Project info, tech stack, dataset description, pipeline diagram |
+### 📊 Dashboard
+- 4 animated KPI cards with count-up animation
+- Placement distribution donut chart
+- Branch-wise grouped bar chart
+- Gender breakdown bar chart
+- Degree-wise bar chart
+- CGPA area chart
+- Feature importance horizontal bar chart
 
-### 💡 Bonus Features
-- ✅ CSV batch prediction with downloadable results
-- ✅ Confidence score (probability gauge)
-- ✅ Feature importance visualization (Random Forest + LR coefficients)
-- ✅ Dark mode professional UI
-- ✅ Responsive layout with interactive Plotly charts
-- ✅ Model download/save functionality
+### 📈 Model Performance
+- Comparison table for all 4 models
+- Multi-metric radar chart
+- Train vs Test accuracy bars
+- Confusion matrix (colour-coded)
+- Classification report table
+- Feature importance from loaded model
 
----
+### 🗃️ Dataset Analysis
+- Raw data table (first 100 rows)
+- Descriptive statistics grid
+- Feature descriptions table
+- Colour-coded correlation heatmap
 
-## 📁 Dataset Description
-
-**Source**: Synthetic dataset of 45,000 engineering students  
-**Target**: `Placement_Status` (Placed / Not Placed)  
-**Class Distribution**: ~36% Placed, ~64% Not Placed
-
-| Feature | Type | Range | Description |
-|---------|------|-------|-------------|
-| Student_ID | int | — | Unique identifier (removed before training) |
-| Age | int | 18–24 | Student age |
-| Gender | str | Male/Female | Student gender |
-| Degree | str | B.Tech/BCA/MCA/B.Sc | Degree program |
-| Branch | str | CSE/ECE/ME/Civil/IT | Engineering branch |
-| CGPA | float | 4.0–10.0 | Cumulative GPA |
-| Internships | int | 0–5 | Number of internships |
-| Projects | int | 0–10 | Number of projects |
-| Coding_Skills | int | 1–10 | Self-rated coding ability |
-| Communication_Skills | int | 1–10 | Self-rated communication |
-| Aptitude_Test_Score | int | 0–100 | Aptitude test score |
-| Soft_Skills_Rating | int | 1–10 | Soft skills rating |
-| Certifications | int | 0–3 | Industry certifications |
-| Backlogs | int | 0–3 | Academic backlogs |
-| **Placement_Status** | **str** | **Placed/Not Placed** | **🎯 Target variable** |
+### 🎨 Design System
+- Dark/Light mode toggle (persists via localStorage)
+- Glassmorphism card system
+- Gradient backgrounds and borders
+- Framer Motion page transitions
+- Animated StatCards with count-up
+- Sticky sidebar with active link indicator
+- API health polling in navbar
+- Toast notification system
 
 ---
 
-## 🛠️ Installation
+## 📜 License
 
-### Prerequisites
-- Python 3.12+
-- pip
-
-### Steps
-
-```bash
-# 1. Clone the repository
-git clone https://github.com/yourusername/StudentPlacementPrediction.git
-cd StudentPlacementPrediction
-
-# 2. (Optional) Create virtual environment
-python -m venv venv
-venv\Scripts\activate        # Windows
-# source venv/bin/activate   # Linux/macOS
-
-# 3. Install dependencies
-pip install -r requirements.txt
-```
-
----
-
-## 📂 Project Structure
-
-```
-StudentPlacementPrediction/
-│
-├── dataset/
-│   └── train.xls              # Dataset (CSV format, 45,000 records)
-│
-├── models/
-│   ├── placement_prediction_model.pkl   # Best trained model
-│   ├── label_encoder.pkl                # Label encoders
-│   └── charts/                          # Training-time charts
-│
-├── notebooks/
-│   └── placement_prediction.py         # EDA + training notebook script
-│
-├── app.py                     # 🚀 Main Streamlit application
-├── train_model.py             # 🤖 Standalone training pipeline
-├── requirements.txt           # 📦 Python dependencies
-└── README.md                  # 📋 This file
-```
-
----
-
-## 🚀 How to Run
-
-### Option 1: Streamlit App (Recommended)
-```bash
-streamlit run app.py
-```
-Then open your browser at: **http://localhost:8501**
-
-### Option 2: Train Models Separately
-```bash
-python train_model.py
-```
-This will:
-1. Load and clean the dataset
-2. Train all 4 models
-3. Print comparison table + classification reports
-4. Save the best model to `models/`
-
-### Option 3: Jupyter Notebook
-```bash
-pip install jupyter
-cd notebooks
-jupyter notebook placement_prediction.ipynb
-```
-
----
-
-## 📊 Results
-
-> Results may vary slightly based on random seed and system configuration.
-
-| Model | Training Accuracy | Testing Accuracy | Precision | Recall | F1 Score |
-|-------|:-----------------:|:----------------:|:---------:|:------:|:--------:|
-| Logistic Regression | ~79% | ~79% | ~79% | ~79% | ~79% |
-| Decision Tree | ~100% | ~82% | ~82% | ~82% | ~82% |
-| **Random Forest** | **~100%** | **~84%** | **~84%** | **~84%** | **~84%** |
-| KNN | ~84% | ~80% | ~80% | ~80% | ~80% |
-
-🏆 **Best Model**: Random Forest (highest testing accuracy)
-
----
-
-## 🖼️ Screenshots
-
-> _Screenshots will appear here after running the application._
-
-| Home Page | Prediction Page |
-|-----------|-----------------|
-| ![Home](screenshots/home.png) | ![Predict](screenshots/predict.png) |
-
-| Dataset Overview | Model Performance |
-|-----------------|-------------------|
-| ![Dataset](screenshots/dataset.png) | ![Performance](screenshots/performance.png) |
-
----
-
-## 🔮 Future Enhancements
-
-- [ ] Hyperparameter tuning with GridSearchCV / Optuna
-- [ ] XGBoost and LightGBM integration
-- [ ] SHAP explainability for individual predictions
-- [ ] REST API endpoint via FastAPI
-- [ ] Docker containerization
-- [ ] Student recommendation engine
-- [ ] Email alert system for at-risk students
-- [ ] CI/CD pipeline with GitHub Actions
-
----
-
-## 📄 License
-
-This project is licensed under the **MIT License** — see the [LICENSE](LICENSE) file for details.
-
----
-
-## 👤 Author
-
-**AI-Based Student Placement Prediction System**
-
-Built with ❤️ using **Python • Streamlit • Scikit-learn • Plotly**
+MIT License — feel free to use this project in your portfolio or extend it for production use.
 
 ---
 
 <div align="center">
-
-⭐ **Star this repository if you found it helpful!** ⭐
-
+Built with ❤️ using FastAPI + React 19 + Scikit-learn
 </div>
