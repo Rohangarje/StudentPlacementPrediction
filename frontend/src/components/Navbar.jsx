@@ -231,6 +231,24 @@ export default function Navbar({ onMenuToggle, isDark, onThemeToggle }) {
           }
         }
 
+        @media (max-width: 360px) {
+          .navbar {
+            padding: 0 0.625rem;
+          }
+          .navbar__title {
+            font-size: 0.85rem;
+            max-width: 120px;
+          }
+          .navbar__right {
+            gap: 0.4rem;
+          }
+          .navbar__theme-btn {
+            width: 32px;
+            height: 32px;
+            font-size: 0.875rem;
+          }
+        }
+
         .navbar__theme-btn {
           width: 36px; height: 36px;
           border-radius: var(--radius-sm);

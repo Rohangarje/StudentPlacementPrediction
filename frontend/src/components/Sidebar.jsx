@@ -4,11 +4,12 @@
  * Fixed left navigation sidebar with:
  * - Brand logo / name
  * - Navigation links with active state
- * - Collapse button on mobile
+ * - Collapse button on mobile (controlled by isOpen prop)
  * - AI status indicator
  */
 
 import { NavLink, useLocation } from 'react-router-dom';
+import { useEffect, useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 
 // Navigation config
@@ -31,6 +32,16 @@ const sidebarVariants = {
  */
 export default function Sidebar({ isOpen, onClose }) {
   const location = useLocation();
+  const [windowWidth, setWindowWidth] = useState(window.innerWidth);
+
+  // Track window width to conditionally animate on mobile only
+  useEffect(() => {
+    const handleResize = () => setWindowWidth(window.innerWidth);
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
+
+  const isMobile = windowWidth <= 768;
 
   return (
     <>
@@ -53,8 +64,13 @@ export default function Sidebar({ isOpen, onClose }) {
         )}
       </AnimatePresence>
 
-      {/* Sidebar */}
-      <aside className="sidebar">
+      {/* Sidebar — animated on mobile via isOpen, static on desktop */}
+      <motion.aside
+        className="sidebar"
+        animate={isMobile ? (isOpen ? 'open' : 'closed') : 'open'}
+        variants={isMobile ? sidebarVariants : undefined}
+        initial={false}
+      >
         {/* Brand */}
         <div className="sidebar__brand">
           <div className="sidebar__logo">
@@ -100,7 +116,7 @@ export default function Sidebar({ isOpen, onClose }) {
           </div>
           <div className="sidebar__version">FastAPI + React 19</div>
         </div>
-      </aside>
+      </motion.aside>
 
       {/* Sidebar CSS */}
       <style>{`
@@ -239,11 +255,6 @@ export default function Sidebar({ isOpen, onClose }) {
         @media (max-width: 768px) {
           .sidebar {
             width: min(82vw, 280px);
-            transform: translateX(-100%);
-            transition: transform var(--transition-slow);
-          }
-          .sidebar.sidebar--open {
-            transform: translateX(0);
           }
         }
       `}</style>
