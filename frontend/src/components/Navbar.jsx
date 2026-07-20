@@ -68,7 +68,7 @@ export default function Navbar({ onMenuToggle, isDark, onThemeToggle }) {
       {/* Right: status + theme toggle */}
       <div className="navbar__right">
         {/* API status */}
-        <div className={`navbar__status navbar__status--${apiStatus}`}>
+        <div className={`navbar__status navbar__status--${apiStatus}`} title={`API ${apiStatus}`}>
           <span className="navbar__status-dot" />
           <span className="navbar__status-label">
             {apiStatus === 'online'   && 'API Online'}
@@ -222,6 +222,11 @@ export default function Navbar({ onMenuToggle, isDark, onThemeToggle }) {
             font-size: 0.95rem;
           }
           .navbar__status {
+            padding: 0.3rem;
+            border: none;
+            background: transparent;
+          }
+          .navbar__status-label {
             display: none;
           }
         }

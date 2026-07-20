@@ -11,7 +11,7 @@
  * - Loading state & error toasts
  */
 
-import { useState, useCallback } from 'react';
+import { useState, useCallback, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { predictPlacement } from '../services/api';
 import ProbabilityRing from '../components/ProbabilityRing';
@@ -148,6 +148,16 @@ export default function Prediction() {
   const [result,  setResult]  = useState(null);
   const [loading, setLoading] = useState(false);
   const [error,   setError]   = useState(null);
+  const [windowWidth, setWindowWidth] = useState(window.innerWidth);
+
+  useEffect(() => {
+    const handleResize = () => setWindowWidth(window.innerWidth);
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
+
+  const isMobile = windowWidth < 480;
+  const ringSize = isMobile ? 140 : 180;
 
   const handleChange = useCallback((key, value) => {
     setForm((prev) => ({ ...prev, [key]: value }));
@@ -309,7 +319,7 @@ export default function Prediction() {
                   <ProbabilityRing
                     probability={result.placement_probability}
                     placed={isPlaced}
-                    size={180}
+                    size={ringSize}
                   />
 
                   {/* Model used */}
@@ -378,6 +388,24 @@ export default function Prediction() {
         </div>
       </div>
 
+      {/* Mobile scoped styles */}
+      <style>{`
+        @media (max-width: 480px) {
+          .prediction-layout .card {
+            padding: 1rem;
+          }
+          .prediction-layout .form-grid--skills {
+            gap: var(--space-sm);
+          }
+          .prediction-layout .prediction-actions {
+            gap: 0.625rem;
+          }
+          .prediction-layout .prediction-actions .btn {
+            width: 100%;
+            flex: none !important;
+          }
+        }
+      `}</style>
     </div>
   );
 }

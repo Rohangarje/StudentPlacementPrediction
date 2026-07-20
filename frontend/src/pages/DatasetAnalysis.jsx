@@ -30,13 +30,13 @@ function CorrelationHeatmap({ data, columns }) {
   };
 
   return (
-    <div style={{ overflowX: 'auto', fontSize: '0.68rem' }}>
-      <table style={{ borderCollapse: 'separate', borderSpacing: '2px', whiteSpace: 'nowrap' }}>
+    <div style={{ overflowX: 'auto', fontSize: '0.68rem', WebkitOverflowScrolling: 'touch' }}>
+      <table className="correlation-table" style={{ borderCollapse: 'separate', borderSpacing: '2px', whiteSpace: 'nowrap' }}>
         <thead>
           <tr>
-            <th style={{ color: 'var(--text-muted)', padding: '0.3rem 0.6rem', textAlign: 'left', minWidth: 90 }}>Feature</th>
+            <th className="corr-header" style={{ color: 'var(--text-muted)', padding: '0.3rem 0.6rem', textAlign: 'left', minWidth: 90 }}>Feature</th>
             {columns.map((c) => (
-              <th key={c} style={{ color: 'var(--text-secondary)', padding: '0.3rem 0.5rem', textAlign: 'center', fontWeight: 600, minWidth: 60 }}>
+              <th key={c} className="corr-col-header" style={{ color: 'var(--text-secondary)', padding: '0.3rem 0.5rem', textAlign: 'center', fontWeight: 600, minWidth: 60 }}>
                 {c.replace(/_/g, ' ').split(' ').map(w => w[0]).join('')}
               </th>
             ))}
@@ -45,12 +45,13 @@ function CorrelationHeatmap({ data, columns }) {
         <tbody>
           {data.map((row, i) => (
             <tr key={i}>
-              <td style={{ color: 'var(--text-secondary)', padding: '0.25rem 0.6rem', fontWeight: 500, minWidth: 90 }}>
+              <td className="corr-row-label" style={{ color: 'var(--text-secondary)', padding: '0.25rem 0.6rem', fontWeight: 500, minWidth: 90 }}>
                 {columns[i].replace(/_/g, ' ')}
               </td>
               {row.map((val, j) => (
                 <td
                   key={j}
+                  className="corr-cell"
                   title={`${columns[i]} / ${columns[j]}: ${val}`}
                   style={{
                     background: toColor(val),
@@ -76,6 +77,7 @@ function CorrelationHeatmap({ data, columns }) {
         <span>■ <span style={{ color: '#F9A8D4' }}>Pink = Negative correlation</span></span>
         <span>Strong: |r| &gt; 0.7 · Moderate: 0.4–0.7 · Weak: &lt; 0.4</span>
       </div>
+      <style>{`@media (max-width: 600px){.correlation-table{font-size:0.6rem !important}.corr-header{padding:0.2rem 0.4rem !important;min-width:60px !important;font-size:0.65rem !important}.corr-col-header{padding:0.2rem 0.25rem !important;min-width:35px !important;font-size:0.6rem !important}.corr-row-label{padding:0.15rem 0.4rem !important;min-width:60px !important;font-size:0.6rem !important}.corr-cell{padding:0.15rem 0.2rem !important;min-width:30px !important;font-size:0.55rem !important}}`}</style>
     </div>
   );
 }

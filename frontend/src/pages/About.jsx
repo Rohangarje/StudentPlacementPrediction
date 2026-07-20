@@ -70,9 +70,9 @@ export default function About() {
           {/* ML Pipeline */}
           <motion.div style={cardStyle} initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: 0.2 }} className="mb-lg">
             <div className="card-header"><span>⚙️</span><div className="card-title">ML Pipeline</div></div>
-            <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.5rem', alignItems: 'center' }}>
+            <div className="pipeline-steps">
               {PIPELINE.map((p, i) => (
-                <div key={p.step} style={{ display: 'flex', alignItems: 'center', gap: '0.4rem' }}>
+                <div key={p.step} className="pipeline-step">
                   <div style={{
                     background: 'rgba(67,97,238,0.12)',
                     border: '1px solid rgba(67,97,238,0.25)',
@@ -87,11 +87,43 @@ export default function About() {
                     {p.icon} {p.label}
                   </div>
                   {i < PIPELINE.length - 1 && (
-                    <span style={{ color: 'var(--text-muted)', fontSize: '1rem' }}>→</span>
+                    <span className="pipeline-arrow" style={{ color: 'var(--text-muted)', fontSize: '1rem' }}>→</span>
                   )}
                 </div>
               ))}
             </div>
+            <style>{`
+              .pipeline-steps {
+                display: flex;
+                flex-wrap: wrap;
+                gap: 0.5rem;
+                align-items: center;
+              }
+              .pipeline-step {
+                display: flex;
+                align-items: center;
+                gap: 0.4rem;
+              }
+              @media (max-width: 600px) {
+                .pipeline-steps {
+                  gap: 0.4rem;
+                }
+                .pipeline-step > div {
+                  font-size: 0.72rem !important;
+                  padding: 0.35rem 0.55rem !important;
+                }
+                .pipeline-arrow {
+                  font-size: 0.85rem !important;
+                }
+              }
+              @media (max-width: 400px) {
+                .pipeline-step > div {
+                  white-space: normal !important;
+                  font-size: 0.68rem !important;
+                  padding: 0.3rem 0.45rem !important;
+                }
+              }
+            `}</style>
           </motion.div>
 
           {/* Objectives */}

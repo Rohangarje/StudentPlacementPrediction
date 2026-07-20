@@ -49,20 +49,23 @@ function ConfusionMatrix({ matrix, classNames }) {
   if (!matrix?.length) return <div className="text-secondary text-sm">No data</div>;
   const max = Math.max(...matrix.flat());
   return (
-    <div style={{ overflowX: 'auto' }}>
-      <table style={{ borderCollapse: 'separate', borderSpacing: '4px', margin: '0 auto' }}>
+    <div style={{ overflowX: 'auto', WebkitOverflowScrolling: 'touch' }}>
+      <table
+        className="confusion-matrix-table"
+        style={{ borderCollapse: 'separate', borderSpacing: '4px', margin: '0 auto' }}
+      >
         <thead>
           <tr>
-            <th style={{ color: 'var(--text-muted)', fontSize: '0.78rem', padding: '0.5rem' }}>Actual \ Predicted</th>
+            <th style={{ color: 'var(--text-muted)', fontSize: '0.78rem', padding: '0.3rem 0.5rem' }}>Actual \ Predicted</th>
             {classNames.map((c) => (
-              <th key={c} style={{ color: '#A5B4FC', fontSize: '0.85rem', padding: '0.5rem 1rem', fontWeight: 600 }}>{c}</th>
+              <th key={c} style={{ color: '#A5B4FC', fontSize: '0.8rem', padding: '0.3rem 0.75rem', fontWeight: 600 }}>{c}</th>
             ))}
           </tr>
         </thead>
         <tbody>
           {matrix.map((row, i) => (
             <tr key={i}>
-              <td style={{ color: '#A5B4FC', fontSize: '0.85rem', fontWeight: 600, paddingRight: '1rem' }}>
+              <td style={{ color: '#A5B4FC', fontSize: '0.8rem', fontWeight: 600, paddingRight: '0.75rem', whiteSpace: 'nowrap' }}>
                 {classNames[i]}
               </td>
               {row.map((val, j) => {
@@ -71,17 +74,19 @@ function ConfusionMatrix({ matrix, classNames }) {
                 return (
                   <td
                     key={j}
+                    className={`confusion-cell ${isMain ? 'confusion-cell--main' : ''}`}
+                    title={`${classNames[i]} / ${classNames[j]}: ${val}`}
                     style={{
                       background: isMain
                         ? `rgba(67,97,238,${0.2 + intensity * 0.6})`
                         : `rgba(247,37,133,${intensity * 0.4})`,
                       borderRadius: '8px',
-                      padding: '1.5rem',
+                      padding: '1.25rem',
                       textAlign: 'center',
                       fontWeight: 700,
-                      fontSize: '1.3rem',
+                      fontSize: '1.2rem',
                       color: isMain ? '#A5B4FC' : '#F9A8D4',
-                      minWidth: '80px',
+                      minWidth: '70px',
                       border: `1px solid ${isMain ? 'rgba(67,97,238,0.4)' : 'rgba(247,37,133,0.2)'}`,
                     }}
                   >
@@ -93,6 +98,24 @@ function ConfusionMatrix({ matrix, classNames }) {
           ))}
         </tbody>
       </table>
+      <style>{`
+        @media (max-width: 480px) {
+          .confusion-matrix-table {
+            font-size: 0.75rem;
+          }
+          .confusion-matrix-table th,
+          .confusion-matrix-table td {
+            padding: 0.5rem !important;
+            font-size: 0.75rem !important;
+            min-width: 50px !important;
+          }
+          .confusion-cell {
+            padding: 0.6rem !important;
+            font-size: 0.85rem !important;
+            min-width: 45px !important;
+          }
+        }
+      `}</style>
     </div>
   );
 }
