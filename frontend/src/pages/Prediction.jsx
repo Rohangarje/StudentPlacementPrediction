@@ -189,7 +189,7 @@ export default function Prediction() {
         </p>
       </motion.div>
 
-      <div style={{ display: 'grid', gridTemplateColumns: '1fr 360px', gap: 'var(--space-xl)', alignItems: 'start' }}>
+      <div className="prediction-layout">
         {/* ── Input Form ── */}
         <motion.div
           className="card"
@@ -209,14 +209,14 @@ export default function Prediction() {
           <div className="section-header mb-md">
             <p className="section-header__title">🎓 Academic Details</p>
           </div>
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(200px, 1fr))', gap: 'var(--space-md)', marginBottom: 'var(--space-lg)' }}>
+          <div className="form-grid form-grid--academic">
             {TEXT_FIELDS.slice(0, 6).map((f) => (
               <FieldItem key={f.key} config={f} value={form[f.key]} onChange={handleChange} />
             ))}
           </div>
 
           {/* Section: Certifications & Backlogs */}
-          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 'var(--space-md)', marginBottom: 'var(--space-lg)' }}>
+          <div className="form-grid form-grid--certs">
             {TEXT_FIELDS.slice(6).map((f) => (
               <FieldItem key={f.key} config={f} value={form[f.key]} onChange={handleChange} />
             ))}
@@ -226,14 +226,14 @@ export default function Prediction() {
           <div className="section-header mb-md">
             <p className="section-header__title">⚡ Skills & Performance</p>
           </div>
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(240px, 1fr))', gap: 'var(--space-md)', marginBottom: 'var(--space-xl)' }}>
+          <div className="form-grid form-grid--skills">
             {SLIDER_FIELDS.map((f) => (
               <SliderField key={f.key} config={f} value={form[f.key]} onChange={handleChange} />
             ))}
           </div>
 
           {/* Buttons */}
-          <div className="flex gap-md" style={{ flexWrap: 'wrap' }}>
+          <div className="prediction-actions">
             <button
               id="predict-btn"
               className="btn btn-primary btn-lg"
@@ -328,7 +328,7 @@ export default function Prediction() {
                     <span>📊</span>
                     <div className="card-title">Class Probabilities</div>
                   </div>
-                  <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 'var(--space-md)' }}>
+                  <div className="result-grid">
                     {[
                       { label: 'Placed',     value: result.placement_probability,     color: '#22C55E' },
                       { label: 'Not Placed', value: result.not_placed_probability, color: '#FF6B35' },
@@ -378,14 +378,6 @@ export default function Prediction() {
         </div>
       </div>
 
-      {/* Mobile responsive override */}
-      <style>{`
-        @media (max-width: 900px) {
-          div[style*="gridTemplateColumns: 1fr 360px"] {
-            grid-template-columns: 1fr !important;
-          }
-        }
-      `}</style>
     </div>
   );
 }

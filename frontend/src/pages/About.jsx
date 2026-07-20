@@ -50,7 +50,7 @@ export default function About() {
         </p>
       </motion.div>
 
-      <div style={{ display: 'grid', gridTemplateColumns: '2fr 1fr', gap: 'var(--space-xl)', alignItems: 'start' }}>
+      <div className="about-layout">
         {/* Left Column */}
         <div>
           {/* Overview */}
@@ -127,7 +127,7 @@ export default function About() {
         </div>
 
         {/* Right Column */}
-        <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--space-lg)' }}>
+        <div className="about-side-column">
           {/* Tech Stack */}
           {TECH_STACK.map((cat, i) => (
             <motion.div
@@ -192,14 +192,6 @@ export default function About() {
         </div>
       </div>
 
-      {/* Mobile fix */}
-      <style>{`
-        @media (max-width: 900px) {
-          div[style*="gridTemplateColumns: 2fr 1fr"] {
-            grid-template-columns: 1fr !important;
-          }
-        }
-      `}</style>
     </div>
   );
 }

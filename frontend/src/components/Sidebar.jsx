@@ -48,7 +48,6 @@ export default function Sidebar({ isOpen, onClose }) {
               background: 'rgba(0,0,0,0.6)',
               backdropFilter: 'blur(4px)',
               zIndex: 49,
-              display: 'none',
             }}
           />
         )}
@@ -239,6 +238,7 @@ export default function Sidebar({ isOpen, onClose }) {
 
         @media (max-width: 768px) {
           .sidebar {
+            width: min(82vw, 280px);
             transform: translateX(-100%);
             transition: transform var(--transition-slow);
           }

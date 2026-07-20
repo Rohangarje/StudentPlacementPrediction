@@ -177,7 +177,7 @@ export default function ModelPerformance() {
       </motion.div>
 
       {/* KPI Cards */}
-      <div className="grid-4 mb-xl" style={{ gridTemplateColumns: 'repeat(4, 1fr)' }}>
+      <div className="grid-4 mb-xl">
         <StatCard icon="🏆" value={bestModel.testing_accuracy} label={`Best: ${metrics.best_model}`} color="#4361EE" suffix="%" delay={0.0} />
         <StatCard icon="🎯" value={bestModel.precision}        label="Precision"  color="#7209B7" suffix="%" delay={0.1} />
         <StatCard icon="🔁" value={bestModel.recall}           label="Recall"     color="#F72585" suffix="%" delay={0.2} />
@@ -321,7 +321,7 @@ export default function ModelPerformance() {
             <div style={{ padding: 'var(--space-lg)', overflowX: 'auto' }}>
               <ConfusionMatrix matrix={metrics.confusion_matrix} classNames={classNames} />
             </div>
-            <div style={{ marginTop: 'var(--space-lg)', display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 'var(--space-sm)', padding: '0 var(--space-md)' }}>
+            <div className="insight-grid">
               <div style={{ background: 'rgba(67,97,238,0.1)', border: '1px solid rgba(67,97,238,0.3)', borderRadius: 'var(--radius-sm)', padding: '0.75rem', textAlign: 'center' }}>
                 <span style={{ color: '#A5B4FC', fontWeight: 700, fontSize: '1.1rem' }}>■</span>
                 <p className="text-xs text-muted mt-sm">Diagonal = Correct predictions (True Positive / Negative)</p>

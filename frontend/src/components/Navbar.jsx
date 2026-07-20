@@ -211,6 +211,20 @@ export default function Navbar({ onMenuToggle, isDark, onThemeToggle }) {
         @media (min-width: 640px) {
           .navbar__status-label { display: inline; }
         }
+        @media (max-width: 480px) {
+          .navbar {
+            padding: 0 0.875rem;
+          }
+          .navbar__subtitle {
+            display: none;
+          }
+          .navbar__title {
+            font-size: 0.95rem;
+          }
+          .navbar__status {
+            display: none;
+          }
+        }
 
         .navbar__theme-btn {
           width: 36px; height: 36px;

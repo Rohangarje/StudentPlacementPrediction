@@ -37,6 +37,7 @@ export default function LoadingSpinner({ message = 'Loading…', fullPage = fals
           display: 'flex', alignItems: 'center', justifyContent: 'center',
           background: 'var(--bg-primary)',
           zIndex: 100,
+          padding: '1rem',
         }}
       >
         {content}

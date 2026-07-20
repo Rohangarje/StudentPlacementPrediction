@@ -125,7 +125,7 @@ export default function Home() {
         <p className="page-hero__subtitle">
           Harness machine learning to predict campus placement outcomes with precision and confidence.
         </p>
-        <div className="flex-center gap-md" style={{ marginTop: '1.5rem', position: 'relative', zIndex: 1 }}>
+        <div className="hero-actions" style={{ marginTop: '1.5rem', position: 'relative', zIndex: 1 }}>
           <Link to="/predict" className="btn btn-primary btn-lg">
             🔮 Predict Now
           </Link>

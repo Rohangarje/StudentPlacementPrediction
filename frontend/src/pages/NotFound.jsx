@@ -13,7 +13,7 @@ export default function NotFound() {
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center',
-        padding: '2rem',
+        padding: 'clamp(1rem, 4vw, 2rem)',
         textAlign: 'center',
       }}
     >
@@ -69,7 +69,7 @@ export default function NotFound() {
           The page you're looking for doesn't exist. It may have been moved, deleted, or the URL might be wrong.
         </p>
 
-        <div style={{ display: 'flex', gap: '1rem', justifyContent: 'center', flexWrap: 'wrap' }}>
+        <div className="hero-actions" style={{ marginTop: '1.5rem' }}>
           <Link to="/" className="btn btn-primary btn-lg">
             🏠 Go Home
           </Link>
