@@ -9,8 +9,10 @@
  */
 
 import { useLocation } from 'react-router-dom';
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useCallback } from 'react';
+import { GoogleLogin } from '@react-oauth/google';
 import { fetchHealth } from '../services/api';
+import { useAuth } from '../context/AuthContext';
 
 const PAGE_TITLES = {
   '/':            { title: 'Home',             subtitle: 'Overview & Quick Stats' },
@@ -27,7 +29,9 @@ const PAGE_TITLES = {
 export default function Navbar({ onMenuToggle, isDark, onThemeToggle }) {
   const location = useLocation();
   const pageInfo = PAGE_TITLES[location.pathname] || { title: 'Page', subtitle: '' };
+  const { isAuthenticated, user, login, logout } = useAuth();
   const [apiStatus, setApiStatus] = useState('checking'); // 'online' | 'offline' | 'checking'
+  const [showLoginMenu, setShowLoginMenu] = useState(false);
 
   // Poll API health on mount
   useEffect(() => {
@@ -43,6 +47,22 @@ export default function Navbar({ onMenuToggle, isDark, onThemeToggle }) {
     const interval = setInterval(check, 30000);
     return () => clearInterval(interval);
   }, []);
+
+  // Close dropdown when clicking outside
+  useEffect(() => {
+    if (!showLoginMenu) return;
+    const handleClick = () => setShowLoginMenu(false);
+    document.addEventListener('click', handleClick);
+    return () => document.removeEventListener('click', handleClick);
+  }, [showLoginMenu]);
+
+  const handleGoogleSuccess = useCallback(
+    async (credentialResponse) => {
+      await login(credentialResponse.credential);
+      setShowLoginMenu(false);
+    },
+    [login]
+  );
 
   return (
     <header className="navbar">
@@ -65,8 +85,57 @@ export default function Navbar({ onMenuToggle, isDark, onThemeToggle }) {
         </div>
       </div>
 
-      {/* Right: status + theme toggle */}
+      {/* Right: auth + status + theme toggle */}
       <div className="navbar__right">
+        {/* ── Auth (Google Sign-In / User Avatar) ── */}
+        <div className="navbar__auth">
+          {isAuthenticated && user ? (
+            <div
+              className="navbar__user"
+              onClick={() => setShowLoginMenu((v) => !v)}
+              style={{ cursor: 'pointer', position: 'relative' }}
+            >
+              <img
+                src={user.picture}
+                alt={user.name}
+                className="navbar__avatar"
+                referrerPolicy="no-referrer"
+                title={user.name}
+              />
+              <span className="navbar__user-name">{user.name}</span>
+
+              {/* Dropdown menu */}
+              {showLoginMenu && (
+                <div
+                  className="navbar__dropdown"
+                  onClick={(e) => e.stopPropagation()}
+                >
+                  <div className="navbar__dropdown-header">
+                    <strong>{user.name}</strong>
+                    <span className="text-muted text-xs">{user.email}</span>
+                  </div>
+                  <hr className="divider" style={{ margin: '0.35rem 0' }} />
+                  <button className="navbar__dropdown-btn" onClick={logout}>
+                    🚪 Sign Out
+                  </button>
+                </div>
+              )}
+            </div>
+          ) : (
+            <div className="navbar__google-btn-wrapper">
+              <GoogleLogin
+                onSuccess={handleGoogleSuccess}
+                onError={() => console.error('Google Sign-In failed')}
+                size="medium"
+                shape="pill"
+                text="signin_with"
+                theme="outline"
+                logo_alignment="left"
+              />
+            </div>
+          )}
+        </div>
+
         {/* API status */}
         <div className={`navbar__status navbar__status--${apiStatus}`} title={`API ${apiStatus}`}>
           <span className="navbar__status-dot" />
@@ -263,6 +332,114 @@ export default function Navbar({ onMenuToggle, isDark, onThemeToggle }) {
           background: rgba(67,97,238,0.2);
           border-color: var(--border-glow);
           transform: scale(1.05);
+        }
+
+        /* ── Auth section styles ── */
+        .navbar__auth {
+          display: flex;
+          align-items: center;
+        }
+
+        .navbar__google-btn-wrapper {
+          display: flex;
+          align-items: center;
+        }
+        .navbar__google-btn-wrapper iframe {
+          border-radius: var(--radius-full) !important;
+        }
+
+        .navbar__user {
+          display: flex;
+          align-items: center;
+          gap: 0.5rem;
+          padding: 0.2rem 0.5rem 0.2rem 0.2rem;
+          border-radius: var(--radius-full);
+          border: 1px solid var(--border-color);
+          background: rgba(67,97,238,0.08);
+          transition: all var(--transition);
+        }
+        .navbar__user:hover {
+          background: rgba(67,97,238,0.15);
+          border-color: var(--border-glow);
+        }
+
+        .navbar__avatar {
+          width: 28px;
+          height: 28px;
+          border-radius: 50%;
+          border: 2px solid var(--primary);
+          object-fit: cover;
+        }
+
+        .navbar__user-name {
+          font-size: 0.8rem;
+          font-weight: 600;
+          color: var(--text-primary);
+          max-width: 100px;
+          overflow: hidden;
+          text-overflow: ellipsis;
+          white-space: nowrap;
+        }
+
+        .navbar__dropdown {
+          position: absolute;
+          top: calc(100% + 6px);
+          right: 0;
+          min-width: 200px;
+          background: var(--bg-card);
+          border: 1px solid var(--border-color);
+          border-radius: var(--radius-md);
+          box-shadow: var(--shadow-lg);
+          padding: 0.5rem;
+          z-index: 100;
+          animation: fadeIn 0.15s ease;
+        }
+
+        .navbar__dropdown-header {
+          display: flex;
+          flex-direction: column;
+          gap: 0.15rem;
+          padding: 0.35rem 0.5rem;
+        }
+        .navbar__dropdown-header strong {
+          font-size: 0.85rem;
+          color: var(--text-primary);
+        }
+
+        .navbar__dropdown-btn {
+          width: 100%;
+          text-align: left;
+          padding: 0.5rem 0.75rem;
+          border-radius: var(--radius-sm);
+          font-size: 0.85rem;
+          color: var(--text-secondary);
+          background: transparent;
+          border: none;
+          cursor: pointer;
+          transition: all var(--transition);
+        }
+        .navbar__dropdown-btn:hover {
+          background: rgba(239,68,68,0.1);
+          color: #FCA5A5;
+        }
+
+        @media (max-width: 640px) {
+          .navbar__user-name {
+            display: none;
+          }
+          .navbar__user {
+            padding: 0.2rem;
+            border: none;
+            background: transparent;
+          }
+          .navbar__avatar {
+            width: 30px;
+            height: 30px;
+          }
+          .navbar__google-btn-wrapper iframe {
+            width: 100px !important;
+            min-width: 100px !important;
+          }
         }
       `}</style>
     </header>

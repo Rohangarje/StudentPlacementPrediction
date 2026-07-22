@@ -12,12 +12,18 @@ API Docs:
 """
 
 import logging
+import os
 from contextlib import asynccontextmanager
+from dotenv import load_dotenv
 
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
+# Load environment variables from .env file
+load_dotenv(os.path.join(os.path.dirname(__file__), '.env'))
+
 from app.api.routes import router
+from app.api.auth_routes import router as auth_router
 from app.utils.logger import setup_logging
 from app.services.predictor import PlacementPredictor
 from app.services.data_service import DataService
@@ -74,8 +80,9 @@ def create_app() -> FastAPI:
         allow_headers=["*"],
     )
 
-    # ── Register API router ──
+    # ── Register API routers ──
     application.include_router(router)
+    application.include_router(auth_router)
 
     return application
 

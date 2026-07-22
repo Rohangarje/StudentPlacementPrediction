@@ -16,6 +16,8 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { predictPlacement } from '../services/api';
 import ProbabilityRing from '../components/ProbabilityRing';
 import LoadingSpinner  from '../components/LoadingSpinner';
+import LoginModal from '../components/LoginModal';
+import { useAuth } from '../context/AuthContext';
 
 // ─── Default form values ───────────────────────────────────────────────────────
 const DEFAULT_FORM = {
@@ -144,10 +146,12 @@ function SliderField({ config, value, onChange }) {
 }
 
 export default function Prediction() {
+  const { isAuthenticated, user } = useAuth();
   const [form,    setForm]    = useState({ ...DEFAULT_FORM });
   const [result,  setResult]  = useState(null);
   const [loading, setLoading] = useState(false);
   const [error,   setError]   = useState(null);
+  const [showLoginModal, setShowLoginModal] = useState(false);
   const [windowWidth, setWindowWidth] = useState(window.innerWidth);
 
   useEffect(() => {
@@ -166,6 +170,12 @@ export default function Prediction() {
   }, []);
 
   const handlePredict = async () => {
+    // Require authentication before predicting
+    if (!isAuthenticated) {
+      setShowLoginModal(true);
+      return;
+    }
+
     setLoading(true);
     setError(null);
     setResult(null);
@@ -387,6 +397,51 @@ export default function Prediction() {
           </AnimatePresence>
         </div>
       </div>
+
+      {/* ── Auth status bar (when logged in) ── */}
+      {isAuthenticated && user && (
+        <motion.div
+          className="card"
+          initial={{ opacity: 0, y: 10 }}
+          animate={{ opacity: 1, y: 0 }}
+          style={{
+            marginTop: 'var(--space-md)',
+            display: 'flex',
+            alignItems: 'center',
+            gap: '0.75rem',
+            padding: '0.75rem 1.25rem',
+          }}
+        >
+          <img
+            src={user.picture}
+            alt={user.name}
+            style={{
+              width: 32,
+              height: 32,
+              borderRadius: '50%',
+              border: '2px solid var(--primary)',
+            }}
+            referrerPolicy="no-referrer"
+          />
+          <div>
+            <div style={{ fontSize: '0.875rem', fontWeight: 600, color: 'var(--text-primary)' }}>
+              {user.name}
+            </div>
+            <div style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>
+              {user.email} · <span style={{ color: 'var(--success)' }}>Authenticated</span>
+            </div>
+          </div>
+          <span style={{ marginLeft: 'auto', fontSize: '0.75rem', color: 'var(--success)' }}>
+            ✅ Signed in
+          </span>
+        </motion.div>
+      )}
+
+      {/* ── Login Modal ── */}
+      <LoginModal
+        isOpen={showLoginModal}
+        onClose={() => setShowLoginModal(false)}
+      />
 
       {/* Mobile scoped styles */}
       <style>{`
