@@ -17,9 +17,14 @@ import { AuthProvider } from './context/AuthContext';
 // ═══ Google OAuth Configuration ═══════════════════════════════════════
 // Set VITE_GOOGLE_CLIENT_ID in your .env file or environment variables.
 // You can create a client ID at https://console.cloud.google.com/apis/credentials
-const GOOGLE_CLIENT_ID =
-  import.meta.env.VITE_GOOGLE_CLIENT_ID ||
-  'YOUR_GOOGLE_CLIENT_ID_HERE';
+// If not set, the app runs in Demo Mode (see LoginModal).
+const rawClientId = import.meta.env.VITE_GOOGLE_CLIENT_ID || '';
+const isPlaceholder = !rawClientId || rawClientId.startsWith('YOUR_GOOGLE_CLIENT_ID_HERE');
+
+// GoogleOAuthProvider requires a non-empty clientId — use a safe dummy when not configured
+const GOOGLE_CLIENT_ID = isPlaceholder
+  ? '000000000000-placeholder.apps.googleusercontent.com'
+  : rawClientId;
 
 const root = document.getElementById('root');
 

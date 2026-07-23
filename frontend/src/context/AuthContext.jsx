@@ -19,6 +19,12 @@ const AuthContext = createContext(null);
 
 const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:8000';
 
+// Demo mode: true if VITE_DEMO_MODE=true OR if no real Google Client ID is set
+const IS_DEMO_MODE =
+  import.meta.env.VITE_DEMO_MODE === 'true' ||
+  !import.meta.env.VITE_GOOGLE_CLIENT_ID ||
+  import.meta.env.VITE_GOOGLE_CLIENT_ID === 'YOUR_GOOGLE_CLIENT_ID_HERE.apps.googleusercontent.com';
+
 export function AuthProvider({ children }) {
   const [user, setUser] = useState(null);
   const [token, setToken] = useState(() => localStorage.getItem('auth_token'));
@@ -86,6 +92,24 @@ export function AuthProvider({ children }) {
     }
   }, []);
 
+  // ─── Demo Login: no Google credentials needed ─────────────────────────
+  const demoLogin = useCallback(async (name = 'Demo User', email = 'demo@example.com') => {
+    setLoading(true);
+    try {
+      const response = await axios.post(`${API_URL}/auth/demo`, { name, email });
+      const { token: jwt, user: userInfo } = response.data;
+      localStorage.setItem('auth_token', jwt);
+      setToken(jwt);
+      setUser(userInfo);
+      return { success: true, user: userInfo };
+    } catch (error) {
+      const message = error.response?.data?.detail || 'Demo login failed.';
+      return { success: false, error: message };
+    } finally {
+      setLoading(false);
+    }
+  }, []);
+
   // ─── Logout ────────────────────────────────────────────────────────────
   const logout = useCallback(() => {
     googleLogout();
@@ -99,7 +123,9 @@ export function AuthProvider({ children }) {
     token,
     isAuthenticated,
     loading,
+    isDemoMode: IS_DEMO_MODE,
     login,
+    demoLogin,
     logout,
   };
 

@@ -1,0 +1,13 @@
+{
+  "pythonVersion": "3.14",
+  "pythonPlatform": "Windows",
+  "venvPath": "d:/Wad practical/StudentPlacementPrediction",
+  "venv": "venv",
+  "extraPaths": [
+    "d:/Wad practical/StudentPlacementPrediction/backend"
+  ],
+  "reportMissingImports": "none",
+  "reportMissingModuleSource": "none",
+  "reportAttributeAccessIssue": "none",
+  "typeCheckingMode": "basic"
+}

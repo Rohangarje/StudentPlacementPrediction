@@ -5,6 +5,7 @@ Auth Routes (app/api/auth_routes.py)
 
 Handles Google OAuth authentication flow:
     POST /auth/google  — Verify Google ID token, return JWT session token
+    POST /auth/demo    — Demo login (no real Google credentials needed)
     GET  /auth/me      — Get current authenticated user info (from session token)
     POST /auth/logout  — Logout (client-side token clear, returns success)
 """
@@ -12,12 +13,13 @@ Handles Google OAuth authentication flow:
 from __future__ import annotations
 
 import logging
+import os
 from typing import Any, Dict, Optional
 
 from fastapi import APIRouter, HTTPException, Header, Request, status
 from pydantic import BaseModel, Field
 
-from app.services.auth_service import (
+from ..services.auth_service import (
     verify_google_token,
     create_session_token,
     verify_session_token,
@@ -25,6 +27,8 @@ from app.services.auth_service import (
 
 logger = logging.getLogger(__name__)
 router = APIRouter(prefix="/auth", tags=["Authentication"])
+
+DEMO_MODE = os.getenv("DEMO_MODE", "true").lower() == "true"
 
 
 # ══════════════════════════════════════════════════════════════════════════════
@@ -47,6 +51,12 @@ class UserResponse(BaseModel):
     """Response for GET /auth/me."""
     authenticated: bool
     user: Optional[Dict[str, Any]] = Field(None, description="User info if authenticated")
+
+
+class DemoAuthRequest(BaseModel):
+    """Request body for demo authentication (no real credentials needed)."""
+    name: str = Field(default="Demo User", description="Display name for the demo user")
+    email: str = Field(default="demo@example.com", description="Email for the demo user")
 
 
 class LogoutResponse(BaseModel):
@@ -148,3 +158,36 @@ async def logout() -> LogoutResponse:
     """
     return LogoutResponse(success=True, message="Logged out successfully. Please discard your token.")
 
+
+@router.post(
+    "/demo",
+    response_model=AuthResponse,
+    status_code=status.HTTP_200_OK,
+    summary="Demo login (no real Google credentials needed)",
+)
+async def demo_auth(body: DemoAuthRequest = DemoAuthRequest()) -> AuthResponse:
+    """
+    Demo authentication endpoint — issues a JWT for testing without
+    requiring a real Google account. Only available when DEMO_MODE=true.
+    """
+    if not DEMO_MODE:
+        raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN,
+            detail="Demo mode is disabled on this server.",
+        )
+
+    demo_user = {
+        "sub": "demo-user-001",
+        "email": body.email,
+        "name": body.name,
+        "picture": "https://ui-avatars.com/api/?name=Demo+User&background=4361EE&color=fff&size=128",
+    }
+
+    session_token = create_session_token(demo_user)
+    logger.info("Demo login: %s (%s)", demo_user["name"], demo_user["email"])
+
+    return AuthResponse(
+        success=True,
+        token=session_token,
+        user=demo_user,
+    )
