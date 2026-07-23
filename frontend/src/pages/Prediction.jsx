@@ -169,13 +169,7 @@ export default function Prediction() {
     setError(null);
   }, []);
 
-  const handlePredict = async () => {
-    // Require authentication before predicting
-    if (!isAuthenticated) {
-      setShowLoginModal(true);
-      return;
-    }
-
+  const runPrediction = useCallback(async () => {
     setLoading(true);
     setError(null);
     setResult(null);
@@ -187,7 +181,21 @@ export default function Prediction() {
     } finally {
       setLoading(false);
     }
+  }, [form]);
+
+  const handlePredict = async () => {
+    // Require authentication before predicting
+    if (!isAuthenticated) {
+      setShowLoginModal(true);
+      return;
+    }
+    await runPrediction();
   };
+
+  // After successful Google login, auto-run the prediction
+  const handleLoginSuccess = useCallback(() => {
+    runPrediction();
+  }, [runPrediction]);
 
   const handleClear  = () => { setResult(null); setError(null); };
   const handleReset  = () => { setForm({ ...DEFAULT_FORM }); setResult(null); setError(null); };
@@ -441,6 +449,7 @@ export default function Prediction() {
       <LoginModal
         isOpen={showLoginModal}
         onClose={() => setShowLoginModal(false)}
+        onSuccess={handleLoginSuccess}
       />
 
       {/* Mobile scoped styles */}

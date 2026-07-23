@@ -38,6 +38,8 @@ from app.models.schemas import (
     PredictionResponse,
     StudentInput,
 )
+from app.services.data_service import DataService
+from app.services.predictor import PlacementPredictor
 
 logger    = logging.getLogger(__name__)
 router    = APIRouter()
